@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +12,17 @@
       background: #10131a;
       min-height: 100vh;
     }
+
     .container {
       max-width: 400px;
       margin: 40px auto;
       background: #181c24;
       border-radius: 12px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
       padding: 24px 16px 32px 16px;
       position: relative;
     }
+
     h1 {
       text-align: center;
       font-size: 2rem;
@@ -28,9 +31,11 @@
       text-transform: uppercase;
       letter-spacing: 2px;
     }
+
     .list {
       margin-bottom: 32px;
     }
+
     .card {
       display: flex;
       align-items: center;
@@ -38,70 +43,116 @@
       border-radius: 8px;
       padding: 12px 0;
       margin-bottom: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      /* Stronger shadow for floating feel */
       color: #fff;
     }
-    .card.k { background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%); }
-    .card.a { background: linear-gradient(90deg, #2193b0 0%, #6dd5ed 100%); }
-    .card.h { background: linear-gradient(90deg, #56ccf2 0%, #2f80ed 100%); }
+
+    .card.k {
+      background: linear-gradient(90deg, #FF512F 0%, #DD2476 100%);
+    }
+
+    /* Red/Pink */
+    .card.a {
+      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+    }
+
+    /* Green */
+    .card.h {
+      background: linear-gradient(90deg, #4568DC 0%, #B06AB3 100%);
+    }
+
+    /* Purple */
     .card .left {
       background: #232b36;
       color: #43e97b;
       border: none;
       border-radius: 6px;
       padding: 6px 12px;
-      font-size: 0.95rem;
+      font-size: 0.75rem;
+      /* Smaller text */
+      font-weight: 600;
       cursor: pointer;
       margin-left: 8px;
       margin-right: 8px;
       transition: background 0.2s;
     }
-    .card .left:hover { background: #2a3442; }
+
+    .card .left:hover {
+      background: #2a3442;
+    }
+
     .card .right {
       background: #232b36;
       color: #6dd5ed;
       border: none;
       border-radius: 6px;
       padding: 6px 12px;
-      font-size: 0.95rem;
+      font-size: 0.75rem;
+      /* Smaller text */
+      font-weight: 600;
       cursor: pointer;
       margin-left: 8px;
       margin-right: 8px;
       transition: background 0.2s;
     }
-    .card .right:hover { background: #2a3442; }
+
+    .card .right:hover {
+      background: #2a3442;
+    }
+
     .person-name {
       flex: 1;
       text-align: center;
-      font-size: 1.1rem;
-      font-weight: 500;
+      font-size: 3rem;
+      /* Bigger text */
+      font-weight: 700;
       color: #fff;
     }
+
     .archive {
       margin-top: 24px;
       color: #fff;
+      display: flex;
+      gap: 16px;
     }
+
+    .archive-col {
+      flex: 1;
+      background: #232b36;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
     .archive h2 {
       font-size: 1.1rem;
-      margin: 18px 0 6px 0;
+      margin: 0 0 12px 0;
       color: #b2c2e0;
+      text-align: center;
+      border-bottom: 1px solid #2a3442;
+      padding-bottom: 8px;
     }
+
     .empty {
       color: #6c7a92;
       font-size: 0.98rem;
       margin-bottom: 8px;
+      text-align: center;
     }
+
     .date {
       color: #b2c2e0;
       font-size: 0.92rem;
       margin-left: 6px;
     }
+
     .clear-btn-container {
       position: fixed;
       left: 24px;
       bottom: 24px;
       z-index: 100;
     }
+
     .clear-btn {
       width: 40px;
       height: 40px;
@@ -110,11 +161,12 @@
       background: #232b36;
       color: #fff;
       font-size: 1.3rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
       outline: none;
     }
+
     .clear-btn.confirm {
       background: #e53935;
       color: #fff;
@@ -123,19 +175,33 @@
       height: 40px;
       border-radius: 20px;
     }
-    .clear-btn:hover { background: #2a3442; }
-    .clear-btn.confirm:hover { background: #b71c1c; }
+
+    .clear-btn:hover {
+      background: #2a3442;
+    }
+
+    .clear-btn.confirm:hover {
+      background: #b71c1c;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h1>LUNCHAPP</h1>
+    <div style="text-align:center; margin-bottom:24px;">
+      <img src="lunchapp.png" alt="Lunch App Logo"
+        style="max-width:300px; width:80%; height:auto; display:inline-block; filter: drop-shadow(0 2px 8px #222);">
+    </div>
     <div class="list" id="list"></div>
     <div class="archive">
-      <h2>I paid</h2>
-      <div id="iPaidList"></div>
-      <h2>They paid</h2>
-      <div id="theyPaidList"></div>
+      <div class="archive-col">
+        <h2>I paid</h2>
+        <div id="iPaidList"></div>
+      </div>
+      <div class="archive-col">
+        <h2>They paid</h2>
+        <div id="theyPaidList"></div>
+      </div>
     </div>
     <div class="clear-btn-container">
       <button class="clear-btn" id="clearBtn" title="Toggle to enable clear">🗑️</button>
@@ -165,16 +231,144 @@
         listDiv.innerHTML = '<div class="empty">No more people</div>';
       } else {
         people.forEach(person => {
+          const cardWrapper = document.createElement('div');
+          cardWrapper.style.position = 'relative';
+          cardWrapper.style.overflow = 'hidden';
+          cardWrapper.style.marginBottom = '12px';
+          cardWrapper.style.borderRadius = '8px';
+          cardWrapper.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)'; // Shadow for the wrapper
+
+          // Backgrounds for swipe actions
+          const bgLeft = document.createElement('div');
+          bgLeft.style.position = 'absolute';
+          bgLeft.style.top = '0';
+          bgLeft.style.bottom = '0';
+          bgLeft.style.left = '0';
+          bgLeft.style.width = '100%';
+          bgLeft.style.background = '#333'; // Gray background
+          bgLeft.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.5)'; // Inner shadow
+          bgLeft.style.display = 'flex';
+          bgLeft.style.alignItems = 'center';
+          bgLeft.style.paddingLeft = '20px';
+          bgLeft.style.fontWeight = 'bold';
+          bgLeft.style.color = '#fff'; // White text
+          bgLeft.style.zIndex = '0';
+          bgLeft.innerHTML = 'I PAID';
+
+          const bgRight = document.createElement('div');
+          bgRight.style.position = 'absolute';
+          bgRight.style.top = '0';
+          bgRight.style.bottom = '0';
+          bgRight.style.right = '0';
+          bgRight.style.width = '100%';
+          bgRight.style.background = '#333'; // Gray background
+          bgRight.style.boxShadow = 'inset 0 0 10px rgba(0,0,0,0.5)'; // Inner shadow
+          bgRight.style.display = 'flex';
+          bgRight.style.alignItems = 'center';
+          bgRight.style.justifyContent = 'flex-end';
+          bgRight.style.paddingRight = '20px';
+          bgRight.style.fontWeight = 'bold';
+          bgRight.style.color = '#fff'; // White text
+          bgRight.style.zIndex = '0';
+          bgRight.innerHTML = 'THEY PAID';
+
           const card = document.createElement('div');
           card.className = `card ${person.id.toLowerCase()}`;
+          card.style.marginBottom = '0'; // Wrapper handles margin
+          card.style.position = 'relative';
+          card.style.zIndex = '1';
+          card.style.transition = 'transform 0.1s linear';
+          card.style.cursor = 'grab';
+
           card.innerHTML = `
-            <button class="left">← I paid</button>
+            <button class="left">I</button>
             <span class="person-name">${person.name}</span>
-            <button class="right">They paid →</button>
+            <button class="right">THEY</button>
           `;
-          card.querySelector('.left').onclick = () => archive(person.id, 'iPaid');
-          card.querySelector('.right').onclick = () => archive(person.id, 'theyPaid');
-          listDiv.appendChild(card);
+
+          // Button clicks still work
+          card.querySelector('.left').onclick = (e) => { e.stopPropagation(); archive(person.id, 'iPaid'); };
+          card.querySelector('.right').onclick = (e) => { e.stopPropagation(); archive(person.id, 'theyPaid'); };
+
+          cardWrapper.appendChild(bgLeft);
+          cardWrapper.appendChild(bgRight);
+          cardWrapper.appendChild(card);
+          listDiv.appendChild(cardWrapper);
+
+          // Swipe Logic
+          let startX = 0;
+          let currentX = 0;
+          let isDragging = false;
+          const threshold = 100;
+
+          const onStart = (x) => {
+            startX = x;
+            isDragging = true;
+            card.style.transition = 'none';
+            card.style.cursor = 'grabbing';
+          };
+
+          const onMove = (x) => {
+            if (!isDragging) return;
+            currentX = x - startX;
+            card.style.transform = `translateX(${currentX}px)`;
+
+            // Fade out card as it moves
+            // Start fading after 50px, fully transparent at 300px
+            const fadeStart = 50;
+            const fadeDistance = 250;
+            const opacity = Math.max(0, 1 - Math.max(0, Math.abs(currentX) - fadeStart) / fadeDistance);
+            card.style.opacity = opacity;
+
+            // Visual feedback opacity for backgrounds
+            if (currentX > 0) { // Swiping Right (They paid)
+              bgLeft.style.opacity = '0';
+              bgRight.style.opacity = '1';
+            } else { // Swiping Left (I paid)
+              bgLeft.style.opacity = '1';
+              bgRight.style.opacity = '0';
+            }
+          };
+
+          const onEnd = () => {
+            if (!isDragging) return;
+            isDragging = false;
+            card.style.cursor = 'grab';
+            card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+
+            if (currentX > threshold) {
+              // Swiped Right -> They Paid
+              card.style.transform = `translateX(120%)`;
+              card.style.opacity = '0';
+              setTimeout(() => archive(person.id, 'theyPaid'), 300);
+            } else if (currentX < -threshold) {
+              // Swiped Left -> I Paid
+              card.style.transform = `translateX(-120%)`;
+              card.style.opacity = '0';
+              setTimeout(() => archive(person.id, 'iPaid'), 300);
+            } else {
+              // Reset
+              card.style.transform = `translateX(0)`;
+              card.style.opacity = '1';
+            }
+            currentX = 0;
+          };
+
+          // Touch Events
+          card.addEventListener('touchstart', (e) => onStart(e.touches[0].clientX));
+          card.addEventListener('touchmove', (e) => onMove(e.touches[0].clientX));
+          card.addEventListener('touchend', onEnd);
+
+          // Mouse Events
+          card.addEventListener('mousedown', (e) => onStart(e.clientX));
+          window.addEventListener('mousemove', (e) => {
+            if (isDragging) onMove(e.clientX);
+          });
+          window.addEventListener('mouseup', () => {
+            if (isDragging) onEnd();
+          });
+          // Prevent text selection during drag
+          card.addEventListener('selectstart', (e) => e.preventDefault());
         });
       }
       // Archive lists
@@ -199,6 +393,7 @@
 
     function archive(id, type) {
       const person = people.find(p => p.id === id);
+      if (!person) return; // Safety check
       people = [...people.filter(p => p.id !== id), person];
       const archived = { ...person, date: getToday() };
       if (type === 'iPaid') iPaid.push(archived);
@@ -208,7 +403,7 @@
       render();
     }
 
-    document.getElementById('clearBtn').onclick = function() {
+    document.getElementById('clearBtn').onclick = function () {
       if (clearToggle) {
         iPaid = [];
         theyPaid = [];
@@ -225,4 +420,5 @@
     render();
   </script>
 </body>
+
 </html>
