@@ -460,8 +460,11 @@
       if (iPaid.length === 0) {
         iPaidDiv.innerHTML = '<div class="empty">None</div>';
       } else {
-        iPaid.slice(-5).forEach((p, index) => {
-          const actualIndex = iPaid.length - 5 + index;
+        const recentIPaid = iPaid.slice(-5);
+        const startIndex = Math.max(0, iPaid.length - 5);
+
+        recentIPaid.forEach((p, index) => {
+          const actualIndex = startIndex + index;
           const entry = document.createElement('div');
           entry.className = 'archive-entry';
           entry.innerHTML = `
@@ -482,7 +485,7 @@
               deleteBtn.textContent = 'X';
               deleteBtn.onclick = (e) => {
                 e.stopPropagation();
-                deleteFromArchive(actualIndex >= 0 ? actualIndex : iPaid.length + index, 'iPaid');
+                deleteFromArchive(actualIndex, 'iPaid');
               };
               entry.appendChild(deleteBtn);
             }
@@ -497,8 +500,11 @@
       if (theyPaid.length === 0) {
         theyPaidDiv.innerHTML = '<div class="empty">None</div>';
       } else {
-        theyPaid.slice(-5).forEach((p, index) => {
-          const actualIndex = theyPaid.length - 5 + index;
+        const recentTheyPaid = theyPaid.slice(-5);
+        const startIndex = Math.max(0, theyPaid.length - 5);
+
+        recentTheyPaid.forEach((p, index) => {
+          const actualIndex = startIndex + index;
           const entry = document.createElement('div');
           entry.className = 'archive-entry';
           entry.innerHTML = `
@@ -519,7 +525,7 @@
               deleteBtn.textContent = 'X';
               deleteBtn.onclick = (e) => {
                 e.stopPropagation();
-                deleteFromArchive(actualIndex >= 0 ? actualIndex : theyPaid.length + index, 'theyPaid');
+                deleteFromArchive(actualIndex, 'theyPaid');
               };
               entry.appendChild(deleteBtn);
             }
@@ -539,12 +545,34 @@
         clearBtn.textContent = '🗑️';
         clearBtn.title = 'Toggle to enable clear';
       }
+
+      // Add/Remove button
+      const addBtn = document.getElementById('addBtn');
+      const hasOthCard = people.some(p => p.id.startsWith('OTH'));
+      if (hasOthCard) {
+        addBtn.textContent = '−';
+        addBtn.title = 'Remove OTH card';
+      } else {
+        addBtn.textContent = '+';
+        addBtn.title = 'Add temporary OTH card';
+      }
     }
 
     function archive(id, type) {
       const person = people.find(p => p.id === id);
       if (!person) return; // Safety check
-      people = [...people.filter(p => p.id !== id), person];
+
+      // Check if this is a temporary OTH card
+      const isOthCard = id.startsWith('OTH');
+
+      if (isOthCard) {
+        // Remove OTH card permanently
+        people = people.filter(p => p.id !== id);
+      } else {
+        // For K, A, H cards, move to end (persistent behavior)
+        people = [...people.filter(p => p.id !== id), person];
+      }
+
       const archived = { ...person, date: getToday() };
       if (type === 'iPaid') iPaid.push(archived);
       else theyPaid.push(archived);
@@ -579,9 +607,19 @@
     };
 
     function addOthCard() {
-      othCounter++;
-      const newOth = { id: `OTH${othCounter}`, name: 'OTH' };
-      people.unshift(newOth); // Add to the beginning of the list
+      // Check if there's already an OTH card
+      const existingOth = people.find(p => p.id.startsWith('OTH'));
+
+      if (existingOth) {
+        // Remove the OTH card
+        people = people.filter(p => !p.id.startsWith('OTH'));
+      } else {
+        // Add a new OTH card
+        othCounter++;
+        const newOth = { id: `OTH${othCounter}`, name: 'OTH' };
+        people.unshift(newOth); // Add to the beginning of the list
+      }
+
       render();
     }
 
