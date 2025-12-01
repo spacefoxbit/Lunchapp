@@ -63,6 +63,11 @@
     }
 
     /* Purple */
+    .card.oth {
+      background: linear-gradient(90deg, #f2994a 0%, #f2c94c 100%);
+    }
+
+    /* Orange/Yellow for temporary cards */
     .card .left {
       background: #232b36;
       color: #43e97b;
@@ -146,6 +151,46 @@
       margin-left: 6px;
     }
 
+    .archive-entry {
+      position: relative;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: #2a3442;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .archive-entry:hover {
+      background: #323d4f;
+    }
+
+    .archive-entry-text {
+      flex: 1;
+      color: #e8eef7;
+      font-size: 0.95rem;
+    }
+
+    .delete-btn {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-left: 8px;
+    }
+
+    .delete-btn:hover {
+      background: #b71c1c;
+    }
+
     .clear-btn-container {
       position: fixed;
       left: 24px;
@@ -183,6 +228,37 @@
     .clear-btn.confirm:hover {
       background: #b71c1c;
     }
+
+    .add-btn-container {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 100;
+    }
+
+    .add-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+      color: #fff;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 12px rgba(242, 153, 74, 0.4);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      outline: none;
+      font-weight: bold;
+    }
+
+    .add-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(242, 153, 74, 0.6);
+    }
+
+    .add-btn:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
 
@@ -195,16 +271,19 @@
     <div class="list" id="list"></div>
     <div class="archive">
       <div class="archive-col">
-        <h2>I paid</h2>
+        <h2>I PAID</h2>
         <div id="iPaidList"></div>
       </div>
       <div class="archive-col">
-        <h2>They paid</h2>
+        <h2>THEY PAID</h2>
         <div id="theyPaidList"></div>
       </div>
     </div>
     <div class="clear-btn-container">
       <button class="clear-btn" id="clearBtn" title="Toggle to enable clear">🗑️</button>
+    </div>
+    <div class="add-btn-container">
+      <button class="add-btn" id="addBtn" title="Add temporary OTH card">+</button>
     </div>
   </div>
   <script>
@@ -217,6 +296,7 @@
     let iPaid = JSON.parse(localStorage.getItem('iPaid') || '[]');
     let theyPaid = JSON.parse(localStorage.getItem('theyPaid') || '[]');
     let clearToggle = false;
+    let othCounter = 0;
 
     function getToday() {
       const d = new Date();
@@ -374,10 +454,80 @@
       // Archive lists
       const iPaidDiv = document.getElementById('iPaidList');
       const theyPaidDiv = document.getElementById('theyPaidList');
-      iPaidDiv.innerHTML = iPaid.length === 0 ? '<div class="empty">None</div>' :
-        iPaid.slice(-5).map(p => `${p.name} <span class="date">(${p.date})</span>`).join('<br>');
-      theyPaidDiv.innerHTML = theyPaid.length === 0 ? '<div class="empty">None</div>' :
-        theyPaid.slice(-5).map(p => `${p.name} <span class="date">(${p.date})</span>`).join('<br>');
+
+      // Render I Paid list
+      iPaidDiv.innerHTML = '';
+      if (iPaid.length === 0) {
+        iPaidDiv.innerHTML = '<div class="empty">None</div>';
+      } else {
+        iPaid.slice(-5).forEach((p, index) => {
+          const actualIndex = iPaid.length - 5 + index;
+          const entry = document.createElement('div');
+          entry.className = 'archive-entry';
+          entry.innerHTML = `
+            <div class="archive-entry-text">${p.name} <span class="date">(${p.date})</span></div>
+          `;
+
+          let deleteBtn = null;
+          entry.onclick = (e) => {
+            e.stopPropagation();
+            if (deleteBtn) {
+              // Remove delete button if it exists
+              deleteBtn.remove();
+              deleteBtn = null;
+            } else {
+              // Add delete button
+              deleteBtn = document.createElement('button');
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.textContent = 'X';
+              deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteFromArchive(actualIndex >= 0 ? actualIndex : iPaid.length + index, 'iPaid');
+              };
+              entry.appendChild(deleteBtn);
+            }
+          };
+
+          iPaidDiv.appendChild(entry);
+        });
+      }
+
+      // Render They Paid list
+      theyPaidDiv.innerHTML = '';
+      if (theyPaid.length === 0) {
+        theyPaidDiv.innerHTML = '<div class="empty">None</div>';
+      } else {
+        theyPaid.slice(-5).forEach((p, index) => {
+          const actualIndex = theyPaid.length - 5 + index;
+          const entry = document.createElement('div');
+          entry.className = 'archive-entry';
+          entry.innerHTML = `
+            <div class="archive-entry-text">${p.name} <span class="date">(${p.date})</span></div>
+          `;
+
+          let deleteBtn = null;
+          entry.onclick = (e) => {
+            e.stopPropagation();
+            if (deleteBtn) {
+              // Remove delete button if it exists
+              deleteBtn.remove();
+              deleteBtn = null;
+            } else {
+              // Add delete button
+              deleteBtn = document.createElement('button');
+              deleteBtn.className = 'delete-btn';
+              deleteBtn.textContent = 'X';
+              deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                deleteFromArchive(actualIndex >= 0 ? actualIndex : theyPaid.length + index, 'theyPaid');
+              };
+              entry.appendChild(deleteBtn);
+            }
+          };
+
+          theyPaidDiv.appendChild(entry);
+        });
+      }
       // Clear button
       const clearBtn = document.getElementById('clearBtn');
       if (clearToggle) {
@@ -403,6 +553,17 @@
       render();
     }
 
+    function deleteFromArchive(index, type) {
+      if (type === 'iPaid') {
+        iPaid.splice(index, 1);
+        localStorage.setItem('iPaid', JSON.stringify(iPaid));
+      } else {
+        theyPaid.splice(index, 1);
+        localStorage.setItem('theyPaid', JSON.stringify(theyPaid));
+      }
+      render();
+    }
+
     document.getElementById('clearBtn').onclick = function () {
       if (clearToggle) {
         iPaid = [];
@@ -416,6 +577,15 @@
         render();
       }
     };
+
+    function addOthCard() {
+      othCounter++;
+      const newOth = { id: `OTH${othCounter}`, name: 'OTH' };
+      people.unshift(newOth); // Add to the beginning of the list
+      render();
+    }
+
+    document.getElementById('addBtn').onclick = addOthCard;
 
     render();
   </script>
